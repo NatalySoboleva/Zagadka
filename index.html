@@ -5,19 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Загадка</title>
-
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <h1>Играем в загадки!</h1>
+    <h1 class="title">Играем в загадки!</h1>
     <div>
         <div>
-            <output id="zagadka"> 0 </output>
-            <input type="text" id="otvet" />
-            <button id="btn"> Ответ </button>
+            <div id="zagadka" class="zagadka"> 0 </div>
+            <input type="text" id="otvet" class="answer" /><br>
+            <button id="btn" class="btn_answer"> Ответ </button>
+        </div>
+        <div class="modal">
+            <div id="rezult"> 0 </div>
+            <button id="btn_yes"> Да </button>
+            <button id="btn_no"> Нет </button>
         </div>
     </div>
-    <script src="zagadka.js">
+    <script src="js/zagadka.js">
     </script>
 </body>
 
