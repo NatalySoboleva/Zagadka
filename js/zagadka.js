@@ -21,48 +21,28 @@ let baseZagadok = [
     ['Днем спит, ночью летает.', 'сова']
 ];
 
-let acount = 0;
-let discount = 0;
-
 function getGame() {
-    if (acount < 5 && discount < 5) {
-        guess();
-    } else {
-        getAnswer();
-    }
-}
 
-function getAnswer() {
-    const modal = document.getElementsByClassName("modal");
-    const btn = document.getElementById("btn");
-    const btnYes = document.getElementById("btn_yes");
-    const btnNo = document.getElementById("btn_no");
-
-    if (acount == 5 && discount < 5) {
-        modal.classList.add("modal_active");
-        document.getElementById("rezult").innerText = "Вы выиграли! Ещё?";
-    } else if (acount < 5 && discount == 5) {
-        modal.classList.add("modal_active");
-        document.getElementById("rezult").innerText = "Вы проиграли! Ещё?";
-    }
-
-    btnYes.addEventListener("click", function () {
-        getAnswer();
-    });
-
-    btnNo.addEventListener("click", function () {
-        document.getElementById("rezult").innerText = "До свидания!";
-    });
-
-}
-
-function guess() {
+    let acount = 0;
+    let discount = 0;
     let strInput = document.getElementById("otvet");
-    let rand = Math.floor(Math.random() * baseZagadok.length);
-    let zagadka = baseZagadok[rand][0];
-    let answer = baseZagadok[rand][1];
+    let zagadka = "";
+    let answer = "";
+    const modal = document.querySelector(".modal");
 
-    document.getElementById("zagadka").innerHTML = zagadka;
+    function guess() {
+        zagadka = "";
+        strInput.value = "";
+        answer = "";
+        let rand = Math.floor(Math.random() * baseZagadok.length);
+        zagadka = baseZagadok[rand][0];
+        answer = baseZagadok[rand][1];
+        document.getElementById("zagadka").innerHTML = zagadka;
+        modal.classList.remove("modal_active");
+    }
+
+    guess();
+
 
     btn.addEventListener('click', function () {
         let getStringFromInput = function (input) {
@@ -73,18 +53,46 @@ function guess() {
         if (key === answer) {
             acount += 1;
             console.log("acount: " + acount);
-            console.log("discount: " + discount);
-            answer = undefined;
-            strInput.value = "";
-            getGame();
+            if (acount < 5 && discount < 5) {
+                guess();
+            } else {
+                getAnswer();
+            }
         } else {
             discount += 1;
-            console.log("discount: " + discount);
-            answer = "";
-            strInput.value = "";
-            return;
+            if (acount < 5 && discount < 5) {
+                guess();
+            } else {
+                getAnswer();
+            }
         }
     });
+
+    function getAnswer() {
+        const btn = document.getElementById("btn");
+        const btnYes = document.getElementById("btn_yes");
+        const btnNo = document.getElementById("btn_no");
+
+        if (acount === 5 && discount < 5) {
+            modal.classList.add("modal_active");
+            document.getElementById("rezult").innerText = "Вы выиграли! Ещё?";
+        } else if (acount < 5 && discount === 5) {
+            modal.classList.add("modal_active");
+            document.getElementById("rezult").innerText = "Вы проиграли! Ещё?";
+        }
+
+        btnYes.addEventListener("click", function () {
+            modal.classList.toggle("modal_active");
+            acount = 0;
+            discount = 0;
+            getGame();
+        });
+
+        btnNo.addEventListener("click", function () {
+            document.getElementById("rezult").innerText = "До свидания!";
+        });
+
+    }
 }
 
 getGame();
