@@ -82,16 +82,19 @@ function getGame() {
         }
 
         btnYes.addEventListener("click", function () {
-            modal.classList.toggle("modal_active");
-            acount = 0;
-            discount = 0;
-            getGame();
+            location.reload();
         });
 
         btnNo.addEventListener("click", function () {
             document.getElementById("rezult").innerText = "До свидания!";
-        });
+            setTimeout(function () {
+                modal.classList.remove("modal_active");
+            }, 3000);
+            setTimeout(function () {
+                window.close();
+            }, 2000);
 
+        });
     }
 }
 
