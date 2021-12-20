@@ -29,6 +29,9 @@ function getGame() {
     let zagadka = "";
     let answer = "";
     const modal = document.querySelector(".modal");
+    let time;
+    let timerId;
+    let diff;
 
     function guess() {
         zagadka = "";
@@ -42,17 +45,19 @@ function getGame() {
     }
 
     guess();
+    getTimes();
 
+    btn.addEventListener('click', getRezult);
+    strInput.addEventListener('change', getRezult);
 
-    btn.addEventListener('click', function () {
+    function getRezult() {
         let getStringFromInput = function (input) {
             return input.value;
         }
-        let key = getStringFromInput(strInput);
+        let key = getStringFromInput(strInput).toLowerCase();
 
         if (key === answer) {
             acount += 1;
-            console.log("acount: " + acount);
             if (acount < 5 && discount < 5) {
                 guess();
             } else {
@@ -66,36 +71,72 @@ function getGame() {
                 getAnswer();
             }
         }
-    });
+    }
 
     function getAnswer() {
         const btn = document.getElementById("btn");
         const btnYes = document.getElementById("btn_yes");
         const btnNo = document.getElementById("btn_no");
 
-        if (acount === 5 && discount < 5) {
+        if (time == 0 && acount === 5 && discount < 5) {
             modal.classList.add("modal_active");
             document.getElementById("rezult").innerText = "Вы выиграли! Ещё?";
-        } else if (acount < 5 && discount === 5) {
+            clearInterval(timerId);
+
+        } else if (acount < 5 && discount === 5 || time === 1) {
             modal.classList.add("modal_active");
             document.getElementById("rezult").innerText = "Вы проиграли! Ещё?";
+            clearInterval(timerId);
         }
 
         btnYes.addEventListener("click", function () {
             location.reload();
+
         });
 
         btnNo.addEventListener("click", function () {
             document.getElementById("rezult").innerText = "До свидания!";
+            btnYes.classList.add("modal_btn_close");
+            btnNo.classList.add("modal_btn_close");
             setTimeout(function () {
                 modal.classList.remove("modal_active");
             }, 3000);
             setTimeout(function () {
                 window.close();
             }, 2000);
+            setTimeout(function () {
+                window.close();
+            }, 1000);
 
         });
     }
+
+    function getTimes() {
+        const deadline = new Date(Date.now() + 90999); //конечное время
+        timerId = null; //id таймера
+        //получение элементов на странице
+        const $minut = document.querySelector('.timer_minut');
+        const $sec = document.querySelector('.timer_second');
+        //вычисление разницы времени и установка оставшегося времени в элементы на странице
+        function countDownTimer() {
+            diff = deadline - new Date();
+            time = 0;
+            if (diff <= 0) {
+                clearInterval(timerId);
+                time = 1;
+                getAnswer();
+            }
+            const minutes = diff > 0 ? Math.floor(diff / 1000 / 60) % 60 : 0;
+            const second = diff > 0 ? Math.floor(diff / 1000) % 60 : 0;
+            // изменение содержимого страницы
+            $minut.textContent = minutes < 10 ? "0" + minutes : minutes;
+            $sec.textContent = second < 10 ? "0" + second : second;
+        }
+        // вызов фунции
+        countDownTimer();
+        timerId = setInterval(countDownTimer, 1000);
+    }
+
 }
 
 getGame();

@@ -30,6 +30,26 @@ body {
     text-align: center;
 }
 
+.timer_items {
+    display: flex;
+    font-size: 40px;
+    width: 80px;
+}
+
+.timer_item {
+    position: relative;
+    margin-right: 10px;
+    margin-left: 10px;
+    text-align: center;
+}
+
+.timer_item:not(:last-child)::after {
+    content: ":";
+    position: absolute;
+    right: -15px;
+    top: -3px;
+}
+
 .answer {
     width: 500px;
     height: 30px;
@@ -94,5 +114,9 @@ body {
 }
 
 .closed {
+    display: none;
+}
+
+.modal_btn_close {
     display: none;
 }
